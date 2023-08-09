@@ -3,20 +3,25 @@
 @tailwind utilities;
 
 :root {
-	--foreground-rgb: 0, 0, 0;
-	--background-start-rgb: 214, 219, 220;
-	--background-end-rgb: 255, 255, 255;
-}
-
-@media (prefers-color-scheme: dark) {
-	:root {
-		--foreground-rgb: 255, 255, 255;
-		--background-start-rgb: 0, 0, 0;
-		--background-end-rgb: 0, 0, 0;
-	}
+	--foreground-rgb: 255, 255, 255;
+	--background-start-rgb: 0, 0, 0;
+	--background-end-rgb: 0, 0, 0;
 }
 
 body {
 	color: rgb(var(--foreground-rgb));
 	background: linear-gradient(to bottom, transparent, rgb(var(--background-end-rgb))) rgb(var(--background-start-rgb));
+}
+
+::-webkit-scrollbar-track {
+	background-color: transparent;
+}
+
+::-webkit-scrollbar {
+	width: 0.5rem;
+}
+
+::-webkit-scrollbar-thumb {
+	background-color: rgba(var(--foreground-rgb), 0.5);
+	border-radius: 0.25rem;
 }
