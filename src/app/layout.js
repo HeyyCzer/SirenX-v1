@@ -16,7 +16,7 @@ export const metadata = {
 		title: 'SirenTool - The carcols.meta Editor',
 		description: 'The simple carcols.meta editor for GTA V/FiveM',
 		url: 'https://heyyczer.github.io/SirenTool',
-		images: '/siren.png',
+		images: 'https://heyyczer.github.io/SirenTool/siren.png',
 	}
 };
 
