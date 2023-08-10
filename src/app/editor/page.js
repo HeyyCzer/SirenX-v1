@@ -10,7 +10,7 @@ import convert from "xml-js";
 
 export default function EditorPage() {
 	const [config] = useState({
-		columns: 32,
+		columns: 20,
 		rows: 32,
 		maxColumns: 20,
 		colors: {
