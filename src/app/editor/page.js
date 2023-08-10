@@ -244,7 +244,7 @@ export default function EditorPage() {
 					<div>
 						<div className="flex flex-col space-y-2">
 							<Button icon={faUpload} text="Upload your file" size={"sm"} color={"white"} onClick={ () => hiddenFileInput.current.click() } />
-							<Button icon={faDownload} text="Download" size={"sm"} color={"green"} onClick={ handleDownload }  />
+							<Button icon={faDownload} text="Download" size={"sm"} color={"green"} onClick={ handleDownload } disabled={ !doc } />
 						</div>
 					</div>
 
