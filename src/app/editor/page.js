@@ -3,61 +3,193 @@
 import Button from "@/components/Button";
 import LightItem from "@/components/Light/Item";
 import LightRow from "@/components/Light/Row";
+import { getCarcolsFromLights, getLightsFromCarcols, isValidCarcols } from "@/utils/xml";
 import { faDownload, faPaintBrush, faUpload, faXmark } from "@fortawesome/free-solid-svg-icons";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import convert from "xml-js";
 
 export default function EditorPage() {
 	const [config] = useState({
 		columns: 32,
 		rows: 32,
+		maxColumns: 20,
 		colors: {
 			red: {
 				color: "#FF0000",
-				activeColor: "bg-red-500 shadow-[0_0_20px_5px_#FF0000]",
-				defaultColor: "bg-red-500/50",
+				activeColor: {
+					backgroundColor: "#FF0000",
+					boxShadow: "0 0 20px 5px #FF0000",
+				},
+				defaultColor: {
+					backgroundColor: "rgba(255, 0, 0, 0.4)",
+				},
 				buttonColor: "bg-red-500/70 hover:bg-red-700/70",
 			},
 			blue: {
 				color: "#0000FF",
-				activeColor: "bg-blue-700 shadow-[0_0_20px_5px_#0000FF]",
-				defaultColor: "bg-blue-700/50",
+				activeColor: {
+					backgroundColor: "#0000FF",
+					boxShadow: "0 0 20px 5px #0000FF",
+				},
+				defaultColor: {
+					backgroundColor: "rgba(0, 0, 255, 0.4)",
+				},
 				buttonColor: "bg-blue-700/70 hover:bg-blue-900/70",
 			},
 			green: {
 				color: "#00FF00",
-				activeColor: "bg-emerald-500 shadow-[0_0_20px_5px_#00FF00]",
-				defaultColor: "bg-emerald-500/50",
+				activeColor: {
+					backgroundColor: "#00FF00",
+					boxShadow: "0 0 20px 5px #00FF00",
+				},
+				defaultColor: {
+					backgroundColor: "rgba(16, 185, 129, 0.4)",
+				},
 				buttonColor: "bg-emerald-500/70 hover:bg-emerald-700/70",
 			},
 			amber: {
 				color: "#FFD700",
-				activeColor: "bg-amber-500 shadow-[0_0_20px_5px_#FFD700]",
-				defaultColor: "bg-amber-500/50",
-				buttonColor: "bg-amber-500/70 hover:bg-amber-700/70",
+				activeColor: {
+					backgroundColor: "#FFD700",
+					boxShadow: "0 0 20px 5px #FFD700",
+				},
+				defaultColor: {
+					backgroundColor: "rgba(255, 215, 0, 0.4)",
+				},
+				buttonColor: "bg-amber-500 hover:bg-amber-600",
 			},
 			white: {
 				color: "#FFFFFF",
-				activeColor: "bg-white/90 shadow-[0_0_20px_5px_#FFFFFF]",
-				defaultColor: "bg-white/40",
-				buttonColor: "bg-white/50 hover:bg-white/70",
+				activeColor: {
+					backgroundColor: "rgba(255, 255, 255, 0.9)",
+					boxShadow: "0 0 20px 5px #FFFFFF",
+				},
+				defaultColor: {
+					backgroundColor: "rgba(255, 255, 255, 0.3)",
+				},
+				buttonColor: "bg-white/50 hover:bg-white/60",
 			},
 		}
 	});
+
 	const [lights, setLights] = useState([]);
+	const [doc, setDocument] = useState(null);
+	const [documentItem, setDocumentItem] = useState(null);
+
+	const hiddenFileInput = useRef(null);
 
 	const [currentIndex, setCurrentIndex] = useState(0);
 	const [currentBpm, setCurrentBpm] = useState(600);
 	const [currentColor, setCurrentColor] = useState(null);
 	
-	// Initial setup
+	useEffect(() => {
+		const interval = setInterval(() => {
+			setCurrentIndex(currentIndex => (config.rows <= currentIndex + 1 ? 0 : currentIndex + 1));
+		}, 1000 / (currentBpm / 60));
+
+		return () => clearInterval(interval);
+	}, [config.rows, currentBpm]);
+
+	const selectLight = useCallback((type, row, column, e) => {
+		e.preventDefault();
+
+		if (type === "left") {
+			let columns = {};
+			for (const row of lights) {
+				for (const [index, light] of Object.entries(row)) {
+					if (light.color) {
+						columns[index] = true;
+					}
+				}
+			}
+
+			const totalColumns = Object.keys(columns).length;
+			if (totalColumns >= config.maxColumns && !columns[column]) {
+				alert(`You can't have more than ${config.maxColumns} unique columns!`)
+				return;
+			}
+		}
+
+		row = parseInt(row);
+		column = parseInt(column);
+
+		lights[row][column].color = (type === "left" ? currentColor : null);
+
+		setLights(lights);
+	}, [config.maxColumns, currentColor, lights]);
+
 	const selectColor = useCallback((key) => {
 		if (key === "none")
 			return setCurrentColor(null);
 
 		const value = config.colors[key];
 		setCurrentColor([key, value]);
-	}, [config])
+	}, [config]);
 
+	const handleUpload = useCallback(({ target }) => {
+		const file = target.files[0];
+		if (!file) return;
+
+		const reader = new FileReader();
+		reader.onload = ({ target: { result }}) => {
+			// const parser = new DOMParser();
+			// const doc = parser.parseFromString(result, "application/xml");
+
+			const object = JSON.parse(convert.xml2json(result, { compact: true }));
+
+			const [isValid, items] = isValidCarcols(object);
+			if (!isValid)
+				return alert("The selected file is not a valid carcols.meta file!");
+
+			setDocument(object);
+			
+			let item = items;
+			if (Array.isArray(items)) {
+				const ids = {};
+				for (const item of items) {
+					const id = item.id["_attributes"].value;
+					ids[id] = item;
+				}
+
+				if (Object.keys(ids).length > 1) {
+					const value = prompt("Please enter the ID of the carcols.meta entry you want to use:\n", Object.keys(ids).join("\n"));
+					if (!value) return;
+					if (!ids[value])
+						return alert("Invalid ID!");
+
+					setDocumentItem([value, ids[value]]);
+					
+					item = ids[value];
+				}
+			} else {
+				setDocumentItem([null, item]);
+			}
+
+			setLights(getLightsFromCarcols(item, config));
+		}
+		reader.readAsText(file);
+	}, [config]);
+
+	const handleDownload = useCallback(() => {
+		if (!doc) return;
+
+		if (documentItem[0]) {
+			doc.CVehicleModelInfoVarGlobal.Sirens.Item[documentItem[0]] = getCarcolsFromLights(lights, documentItem[1]);
+		} else {
+			doc.CVehicleModelInfoVarGlobal.Sirens.Item = getCarcolsFromLights(lights, documentItem[1]);
+		}
+
+		const xml = convert.json2xml(doc, { compact: true, spaces: 4 });
+		const blob = new Blob([xml], { type: "application/xml" });
+		const url = URL.createObjectURL(blob);
+
+		const a = document.createElement("a");
+		a.href = url;
+		a.download = "carcols.meta";
+		a.click();
+	}, [doc, documentItem, lights]);
+
+	//Initial setup
 	useEffect(() => {
 		const rows = [];
 		for (let i = 0; i < config.rows; i++) {
@@ -68,7 +200,6 @@ export default function EditorPage() {
 					row: i,
 					column: j,
 					color: null,
-					isOn: false,
 				});
 			}
 
@@ -97,27 +228,10 @@ export default function EditorPage() {
 		}
 	}, [config, selectColor]);
 
-	useEffect(() => {
-		const interval = setInterval(() => {
-			setCurrentIndex(currentIndex => (config.rows <= currentIndex + 1 ? 0 : currentIndex + 1));
-		}, 1000 / (currentBpm / 60));
-
-		return () => clearInterval(interval);
-	}, [config.rows, currentBpm]);
-
-	const selectLight = useCallback((type, row, column, e) => {
-		e.preventDefault();
-
-		row = parseInt(row);
-		column = parseInt(column);
-
-		lights[row][column].color = (type === "left" ? currentColor : null);
-
-		setLights(lights);
-	}, [currentColor, lights]);
-
 	return (
 		<main className="min-h-screen">
+			<input type="file" ref={hiddenFileInput} onChange={handleUpload} accept=".meta" className="hidden" />
+
 			<div className="flex">
 				{/* Toolbar */}
 				<aside className="flex flex-col space-y-6 min-w-[300px] px-4 py-8 bg-neutral-950">
@@ -129,12 +243,12 @@ export default function EditorPage() {
 					{/* Import/export file */}
 					<div>
 						<div className="flex flex-col space-y-2">
-							<Button icon={faUpload} text="Upload your file" size={"sm"} color={"white"} />
-							<Button icon={faDownload} text="Download" size={"sm"} color={"green"} />
+							<Button icon={faUpload} text="Upload your file" size={"sm"} color={"white"} onClick={ () => hiddenFileInput.current.click() } />
+							<Button icon={faDownload} text="Download" size={"sm"} color={"green"} onClick={ handleDownload }  />
 						</div>
 					</div>
 
-					{/* Import/export file */}
+					{/* Pattern BPM */}
 					<div>
 						<h6 className="text-white/50 mb-1">
 							BPM
@@ -155,6 +269,12 @@ export default function EditorPage() {
 							<Button id="color-null" icon={ faXmark } text="RMB" className="bg-white/10 hover:bg-white/5" size="sm" onClick={() => selectColor("none")} />
 						</div>
 					</div>
+
+					{/* Spacers */}
+					{/* <div>
+						<h6 className="text-white/50 mb-1">Spacers</h6>
+						<Button icon={faPlusCircle} text="Spacer" size="sm" color="white" className="w-full" onClick={() => setSpacers(spacers => [...spacers, Math.random()]) } />
+					</div> */}
 				</aside>
 				
 				{/* Lights */}

@@ -36,7 +36,7 @@ export default function Button({ color, size, icon, text, onClick, className }) 
 			className={button({
 				color,
 				size,
-				className
+				className,
 			})}
 			onClick={onClick}
 		>

@@ -18,8 +18,9 @@ export default function LightItem({ light: lightData, onClick, onRightClick, row
 		<button 
 			disabled={!onClick} 
 			className={light({
-				className: (currentRow ? color?.activeColor : color?.defaultColor)
+				className: (!currentRow && color?.defaultColor)
 			})} 
+			style={ currentRow ? color?.activeColor : color?.defaultColor }
 			onClick={onClick} 
 			onContextMenu={onRightClick}
 		>
