@@ -5,5 +5,7 @@ module.exports = {
 		extend: {
 		},
 	},
-	plugins: [],
+	plugins: [
+		require('tailwindcss-3d')
+	],
 };
