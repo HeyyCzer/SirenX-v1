@@ -143,20 +143,21 @@ export default function EditorPage() {
 			let item = items;
 			if (Array.isArray(items)) {
 				const ids = {};
-				for (const item of items) {
+				for (const index in items) {
+					const item = items[index];
 					const id = item.id["_attributes"].value;
-					ids[id] = item;
+					ids[id] = [index, item];
 				}
 
 				if (Object.keys(ids).length > 1) {
-					const value = prompt("Please enter the ID of the carcols.meta entry you want to use:\n", Object.keys(ids).join("\n"));
+					const value = prompt(`Please enter the ID of the carcols.meta entry you want to use:\n* ${Object.keys(ids).join("\n* ")}`, Object.keys(ids)[0]);
 					if (!value) return;
 					if (!ids[value])
 						return alert("Invalid ID!");
 
-					setDocumentItem([value, ids[value]]);
+					setDocumentItem([ids[value][0], ids[value][1]]);
 					
-					item = ids[value];
+					item = ids[value][1];
 				}
 			} else {
 				setDocumentItem([null, item]);
@@ -178,7 +179,7 @@ export default function EditorPage() {
 			doc.CVehicleModelInfoVarGlobal.Sirens.Item = getCarcolsFromLights(lights, currentBpm, documentItem[1]);
 		}
 
-		const xml = convert.json2xml(JSON.stringify(doc), { compact: true, spaces: 4 });
+		const xml = convert.json2xml(doc, { compact: true, spaces: "\t" });
 		const blob = new Blob([xml], { type: "application/xml" });
 		const url = URL.createObjectURL(blob);
 
