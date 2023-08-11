@@ -219,6 +219,7 @@ export default function EditorPage() {
 		const colors = Object.keys(config.colors);
 		selectColor(colors[0]);
 
+		// on number press select color
 		const handleKeyDown = ({ key }) => {
 			if (isNaN(parseInt(key))) return;
 			
@@ -228,11 +229,25 @@ export default function EditorPage() {
 			const colorKey = Object.keys(config.colors)[index];
 			selectColor(colorKey);
 		}
-
 		window.addEventListener("keydown", handleKeyDown);
+
+		// on roll scroll increase/decrease bpm
+		const handleWheel = (e) => {
+			if (!e.shiftKey) return;
+			if (e.deltaY > 0) {
+				setCurrentBpm(currentBpm => (currentBpm - 50 < 150 ? 150 : currentBpm - 50));
+			} else {
+				setCurrentBpm(currentBpm => (currentBpm + 50 > 900 ? 900 : currentBpm + 50));
+			}
+		}
+		window.addEventListener("wheel", handleWheel);
+
+		// prevent context menu
+		window.addEventListener("contextmenu", (e) => e.preventDefault());
 
 		return () => {
 			window.removeEventListener("keydown", handleKeyDown);
+			window.removeEventListener("wheel", handleWheel);
 		}
 	}, [config, selectColor]);
 
