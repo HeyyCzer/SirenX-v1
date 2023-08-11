@@ -3,10 +3,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 const { tv } = require("tailwind-variants");
 
 const button = tv({
-	base: "rounded-md font-semibold text-white flex items-center justify-center gap-x-2 transition-colors ease-in-out",
+	base: "rounded-md font-semibold text-white flex items-center justify-center gap-x-2 transition-all ease-in-out",
 	variants: {
 		size: {
-			sm: "px-1 py-1 text-sm",
+			sm: "px-2 py-1 text-sm",
 			md: "px-2 py-1.5",
 			lg: "px-4 py-2",
 		},
