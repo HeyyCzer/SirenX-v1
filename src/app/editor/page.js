@@ -1,10 +1,9 @@
 "use client";
 
-import Button from "@/components/Button";
 import LightItem from "@/components/Light/Item";
 import LightRow from "@/components/Light/Row";
+import ToolbarContent from "@/components/Toolbar/content";
 import { getCarcolsFromLights, getLightsFromCarcols, isValidCarcols } from "@/utils/xml";
-import { faDownload, faPaintBrush, faUpload, faXmark } from "@fortawesome/free-solid-svg-icons";
 import { useCallback, useEffect, useRef, useState } from "react";
 import convert from "xml-js";
 
@@ -241,50 +240,34 @@ export default function EditorPage() {
 		<main className="min-h-screen">
 			<input type="file" ref={hiddenFileInput} onChange={handleUpload} accept=".meta" className="hidden" />
 
-			<div className="flex">
+			<div className="flex flex-col xl:flex-row">
 				{/* Toolbar */}
-				<aside className="flex flex-col space-y-6 min-w-[300px] px-4 py-8 bg-neutral-950">
-					<div>
-						<h1 className="text-center font-semibold text-lg mb-1">Editor</h1>
-						<hr className="border-white/10" />
-					</div>
-
-					{/* Import/export file */}
-					<div>
-						<div className="flex flex-col space-y-2">
-							<Button icon={faUpload} text="Upload your file" size={"sm"} color={"white"} onClick={ () => hiddenFileInput.current.click() } />
-							<Button icon={faDownload} text="Download" size={"sm"} color={"green"} onClick={ handleDownload } disabled={ !doc } />
-						</div>
-					</div>
-
-					{/* Pattern BPM */}
-					<div>
-						<h6 className="text-white/50 mb-1">
-							BPM
-							<span className="text-xs ml-1 text-white/30">({currentBpm})</span>
-						</h6>
-						<input type="range" min={150} step={50} value={currentBpm} max={900} onChange={({ target }) => setCurrentBpm(target.value)} className="w-full h-2 rounded-lg appearance-none cursor-pointer bg-white/10" />
-					</div>
-
-					{/* Colors */}
-					<div>
-						<h6 className="text-white/50 mb-1">Colors</h6>
-						<div className="grid grid-cols-3 gap-2">
-							{
-								Object.entries(config.colors).map(([key, color], index) => (
-									<Button key={key} icon={ faPaintBrush } text={index + 1} className={color.buttonColor} onClick={() => selectColor(key)} size="sm" />
-								))
-							}
-							<Button id="color-null" icon={ faXmark } text="RMB" className="bg-white/10 hover:bg-white/5" size="sm" onClick={() => selectColor("none")} />
-						</div>
-					</div>
-
-					{/* Spacers */}
-					{/* <div>
-						<h6 className="text-white/50 mb-1">Spacers</h6>
-						<Button icon={faPlusCircle} text="Spacer" size="sm" color="white" className="w-full" onClick={() => setSpacers(spacers => [...spacers, Math.random()]) } />
-					</div> */}
+				<aside className="sticky hidden xl:flex flex-col space-y-6 min-w-[250px] xl:min-w-[300px] px-4 py-8 bg-neutral-950">
+					<ToolbarContent
+						config={config}
+						doc={doc}
+						hiddenFileInput={hiddenFileInput}
+						handleDownload={handleDownload}
+						currentBpm={currentBpm}
+						setCurrentBpm={setCurrentBpm}
+						currentColor={currentColor}
+						selectColor={selectColor}
+					/>
 				</aside>
+
+				{/* Horizontal toolbar */}
+				<div className="sticky top-0 xl:hidden flex items-center justify-center bg-neutral-950 py-4 px-8 space-x-12">
+					<ToolbarContent 
+						config={config}
+						doc={doc}
+						hiddenFileInput={hiddenFileInput}
+						handleDownload={handleDownload}
+						currentBpm={currentBpm}
+						setCurrentBpm={setCurrentBpm}
+						currentColor={currentColor}
+						selectColor={selectColor}
+					/>
+				</div>
 				
 				{/* Lights */}
 				<section className="w-full flex justify-center px-24 pt-8 pb-4">
