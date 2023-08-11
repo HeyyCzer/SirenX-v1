@@ -13,6 +13,8 @@ function isValidCarcols(object) {
 export { isValidCarcols };
 
 function getLightsFromCarcols(Item, config) {
+	const bpm = Item.sequencerBpm["_attributes"].value;
+
 	Item = Item.sirens.Item;
 
 	const rows = [];
@@ -23,7 +25,7 @@ function getLightsFromCarcols(Item, config) {
 			const carcols = Item[j]
 			const carcolsColor = carcols?.color?.["_attributes"]?.value.replace("0xFF", "");
 			const active = decimalToBinary(carcols?.flashiness?.sequencer?.["_attributes"]?.value).charAt(i) === "1";
-			
+
 			if (carcolsColor && active) {
 				let color = ["custom", {
 					color: `#${carcolsColor}`,
@@ -53,10 +55,10 @@ function getLightsFromCarcols(Item, config) {
 		rows.push(row);
 	}
 
-	return rows;
+	return [rows, bpm];
 }
 
-function getCarcolsFromLights(lights, documentItem) {
+function getCarcolsFromLights(lights, bpm, documentItem) {
 	const colors = {};
 	const binary = {};
 	for (let i = 0; i < lights.length; i++) {
@@ -77,6 +79,8 @@ function getCarcolsFromLights(lights, documentItem) {
 		documentItem.sirens.Item[key].flashiness.sequencer["_attributes"].value = binaryToDecimal(binary[key]);
 		documentItem.sirens.Item[key].rotation.sequencer["_attributes"].value = binaryToDecimal(binary[key]);
 	}
+
+	documentItem.sequencerBpm["_attributes"].value = bpm;
 
 	return documentItem;
 }

@@ -132,9 +132,6 @@ export default function EditorPage() {
 
 		const reader = new FileReader();
 		reader.onload = ({ target: { result }}) => {
-			// const parser = new DOMParser();
-			// const doc = parser.parseFromString(result, "application/xml");
-
 			const object = JSON.parse(convert.xml2json(result, { compact: true }));
 
 			const [isValid, items] = isValidCarcols(object);
@@ -165,7 +162,9 @@ export default function EditorPage() {
 				setDocumentItem([null, item]);
 			}
 
-			setLights(getLightsFromCarcols(item, config));
+			const [newLights, bpm] = getLightsFromCarcols(item, config);
+			setLights(newLights);
+			setCurrentBpm(bpm);
 		}
 		reader.readAsText(file);
 	}, [config]);
@@ -174,12 +173,12 @@ export default function EditorPage() {
 		if (!doc) return;
 
 		if (documentItem[0]) {
-			doc.CVehicleModelInfoVarGlobal.Sirens.Item[documentItem[0]] = getCarcolsFromLights(lights, documentItem[1]);
+			doc.CVehicleModelInfoVarGlobal.Sirens.Item[documentItem[0]] = getCarcolsFromLights(lights, currentBpm, documentItem[1]);
 		} else {
-			doc.CVehicleModelInfoVarGlobal.Sirens.Item = getCarcolsFromLights(lights, documentItem[1]);
+			doc.CVehicleModelInfoVarGlobal.Sirens.Item = getCarcolsFromLights(lights, currentBpm, documentItem[1]);
 		}
 
-		const xml = convert.json2xml(doc, { compact: true, spaces: 4 });
+		const xml = convert.json2xml(JSON.stringify(doc), { compact: true, spaces: 4 });
 		const blob = new Blob([xml], { type: "application/xml" });
 		const url = URL.createObjectURL(blob);
 
@@ -187,7 +186,7 @@ export default function EditorPage() {
 		a.href = url;
 		a.download = "carcols.meta";
 		a.click();
-	}, [doc, documentItem, lights]);
+	}, [doc, documentItem, currentBpm, lights]);
 
 	//Initial setup
 	useEffect(() => {
