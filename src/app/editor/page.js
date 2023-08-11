@@ -115,6 +115,15 @@ export default function EditorPage() {
 
 		lights[row][column].color = (type === "left" ? currentColor : null);
 
+		if (type === "left") {
+			for (const i in lights) {
+				if (i === row) continue;
+
+				if (lights[i][column].color)
+					lights[i][column].color = currentColor;
+			}
+		}
+
 		setLights(lights);
 	}, [config.maxColumns, currentColor, lights]);
 
