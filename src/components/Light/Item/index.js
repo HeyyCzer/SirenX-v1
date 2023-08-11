@@ -14,6 +14,18 @@ const light = tv({
 
 export default function LightItem({ light: lightData, onClick, onRightClick, rowIndex, index, currentRow }) {
 	const color = lightData?.color ? lightData?.color[1] : null;
+
+	const clickEvent = (e) => {
+		// if is left clicked
+		if (e.buttons === 1) {
+			onClick(e);
+		}
+		// else if is right clicked
+		else if (e.buttons === 2) {
+			onRightClick(e);
+		}
+	}
+
 	return (
 		<button 
 			disabled={!onClick} 
@@ -21,8 +33,8 @@ export default function LightItem({ light: lightData, onClick, onRightClick, row
 				className: (!currentRow && color?.defaultColor)
 			})} 
 			style={ currentRow ? color?.activeColor : color?.defaultColor }
-			onClick={onClick} 
-			onContextMenu={onRightClick}
+			onMouseDown={clickEvent} 
+			onMouseEnter={clickEvent}
 		>
 			{ (rowIndex === 0 && onClick) && index + 1 }
 		</button>
