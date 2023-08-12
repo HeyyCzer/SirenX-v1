@@ -7,6 +7,8 @@ import { getCarcolsFromLights, getLightsFromCarcols, isValidCarcols } from "@/ut
 import { useCallback, useEffect, useRef, useState } from "react";
 import convert from "xml-js";
 
+import * as gtag from "@/lib/gtag";
+
 export default function EditorPage() {
 	const [config] = useState({
 		columns: 20,
@@ -172,6 +174,10 @@ export default function EditorPage() {
 			}
 
 			const [newLights, bpm] = getLightsFromCarcols(item, config);
+			gtag.event({
+				action: "file_import",
+				category: "editor",
+			});
 			setLights(newLights);
 			setCurrentBpm(bpm);
 		}
