@@ -11,9 +11,9 @@ import * as gtag from "@/lib/gtag";
 
 export default function EditorPage() {
 	const [config] = useState({
-		columns: 20,
+		columns: 32,
 		rows: 32,
-		maxColumns: 20,
+		maxColumns: 32,
 		colors: {
 			red: {
 				color: "#FF0000",
