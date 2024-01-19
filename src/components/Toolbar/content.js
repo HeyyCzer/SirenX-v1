@@ -6,9 +6,9 @@ export default function ToolbarContent({ config, doc, hiddenFileInput, handleDow
 		<>
 			{/* Logo */}
 			<div>
-				<h1 aria-label="Siren Tool" className="font-bold text-[2rem] flex justify-center space-x-2">
+				<h1 aria-label="SirenX" className="font-bold text-[2rem] flex justify-center space-x-2">
 					<span className="-mr-3">Siren</span>
-					<span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600">Tool</span>
+					<span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600">X</span>
 				</h1>
 				<hr className="border-white/10 invisible xl:visible" />
 			</div>

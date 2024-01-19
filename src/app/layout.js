@@ -11,14 +11,12 @@ config.autoAddCss = false
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
-	title: "SirenTool - The carcols.meta Editor",
+	title: "SirenX - The carcols.meta Editor",
 	description: "The simple carcols.meta editor for GTA V/FiveM",
 	openGraph: {
-		siteName: "SirenTool",
-		title: 'SirenTool - The carcols.meta Editor',
 		description: 'The simple carcols.meta editor for GTA V/FiveM',
-		url: 'https://heyyczer.github.io/SirenTool',
-		images: 'https://heyyczer.github.io/SirenTool/siren.png',
+		url: 'https://heyyczer.github.io/SirenX',
+		images: 'https://heyyczer.github.io/SirenX/siren.png',
 	}
 };
 

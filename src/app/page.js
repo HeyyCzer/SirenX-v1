@@ -12,9 +12,9 @@ export default function Home() {
 		<main className="flex min-h-screen flex-col items-center py-32 gap-y-24">
 			{/* Hero */}
 			<section className="flex flex-col items-center pb-32">
-				<h1 aria-label="Siren Tool" className="font-bold text-[2rem] md:text-[3rem] lg:text-[5rem] xl:text-[6rem] flex space-x-2">
+				<h1 aria-label="SirenX" className="font-bold text-[2rem] md:text-[3rem] lg:text-[5rem] xl:text-[6rem] flex space-x-2">
 					<span className="-mr-6">Siren</span>
-					<span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600">Tool</span>
+					<span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600">X</span>
 				</h1>
 
 				<p className="text-neutral-400 text-xl text-center">
@@ -30,10 +30,10 @@ export default function Home() {
 			{/* Screenshot */}
 			<section className="grid grid-cols-1 xl:grid-cols-2 items-center gap-14 text-center w-9/12">
 				<div className="w-full md:w-2/3 mx-auto">
-					<Heading className="mx-auto mb-4">What is Siren Tool?</Heading>
+					<Heading className="mx-auto mb-4">What is SirenX?</Heading>
 
 					<p className="text-neutral-400 text-xl">
-						Siren Tool is a web-based tool that allows you to edit <b className="text-white"><i>carcols.meta</i></b> light patterns for <b className="text-white"><i>GTA V</i></b> vehicles.
+						SirenX is a web-based tool that allows you to edit <b className="text-white"><i>carcols.meta</i></b> light patterns for <b className="text-white"><i>GTA V</i></b> vehicles.
 						<br />
 						<br />
 						You can upload your file, edit it and download it back.
