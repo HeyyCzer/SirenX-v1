@@ -12,8 +12,8 @@ import * as gtag from "@/lib/gtag";
 export default function EditorPage() {
 	const [config, updateConfig] = useState({
 		columns: 20,
-		rows: 32,
 		maxColumns: 20,
+		rows: 32,
 		colors: {
 			red: {
 				color: "#FF0000",
@@ -181,8 +181,6 @@ export default function EditorPage() {
 			});
 			setLights(newLights);
 			setCurrentBpm(bpm);
-
-			console.log("Imported file:", newLights)
 
 			alert(`File imported successfully! Your editor now have ${config.columns}/32 columns.`);
 		}

@@ -39,7 +39,8 @@ function getLightsFromCarcols(Item, config, updateConfig) {
 				carcolsColor = null;
 			}
 
-			const active = decimalToBinary(carcols?.flashiness?.sequencer?.["_attributes"]?.value).charAt(i) === "1";
+			const binary = decimalToBinary(carcols?.flashiness?.sequencer?.["_attributes"]?.value);
+			const active = binary.charAt(i) === "1";
 
 			if (carcolsColor && active) {
 				let color = ["custom", {
