@@ -12,7 +12,7 @@ function isValidCarcols(object) {
 
 export { isValidCarcols };
 
-function getLightsFromCarcols(Item, config) {
+function getLightsFromCarcols(Item, config, updateConfig) {
 	const bpm = Item.sequencerBpm["_attributes"].value;
 
 	Item = Item.sirens.Item;
@@ -22,8 +22,23 @@ function getLightsFromCarcols(Item, config) {
 		const row = [];
 
 		for (let j = 0; j < config.columns; j++) {
-			const carcols = Item[j]
-			const carcolsColor = carcols?.color?.["_attributes"]?.value.replace("0xFF", "");
+			const carcols = Item[j];
+			if ((j === config.columns - 1) && Item.length > config.columns) {
+				config.columns = Item.length;
+				config.maxColumns = Item.length;
+				updateConfig(config);
+			} else if (!carcols) {
+				config.columns = j;
+				config.maxColumns = j;
+				updateConfig(config);
+				break;
+			}
+
+			let carcolsColor = carcols?.color?.["_attributes"]?.value.replace("0xFF", "");
+			if (carcolsColor.startsWith("0x00")) {
+				carcolsColor = null;
+			}
+
 			const active = decimalToBinary(carcols?.flashiness?.sequencer?.["_attributes"]?.value).charAt(i) === "1";
 
 			if (carcolsColor && active) {

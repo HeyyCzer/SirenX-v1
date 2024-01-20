@@ -10,10 +10,10 @@ import convert from "xml-js";
 import * as gtag from "@/lib/gtag";
 
 export default function EditorPage() {
-	const [config] = useState({
-		columns: 32,
+	const [config, updateConfig] = useState({
+		columns: 20,
 		rows: 32,
-		maxColumns: 32,
+		maxColumns: 20,
 		colors: {
 			red: {
 				color: "#FF0000",
@@ -148,6 +148,7 @@ export default function EditorPage() {
 			if (!isValid)
 				return alert("The selected file is not a valid carcols.meta file!");
 
+			setLights([]);
 			setDocument(object);
 			
 			let item = items;
@@ -173,13 +174,17 @@ export default function EditorPage() {
 				setDocumentItem([null, item]);
 			}
 
-			const [newLights, bpm] = getLightsFromCarcols(item, config);
+			const [newLights, bpm] = getLightsFromCarcols(item, config, updateConfig);
 			gtag.event({
 				action: "file_import",
 				category: "editor",
 			});
 			setLights(newLights);
 			setCurrentBpm(bpm);
+
+			console.log("Imported file:", newLights)
+
+			alert(`File imported successfully! Your editor now have ${config.columns}/32 columns.`);
 		}
 		reader.readAsText(file);
 	}, [config]);
