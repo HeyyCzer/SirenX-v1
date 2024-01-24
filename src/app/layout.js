@@ -12,11 +12,14 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
 	title: "SirenX - The carcols.meta Editor",
-	description: "The simple carcols.meta editor for GTA V/FiveM",
+	description: "The simple carcols.meta editor for GTA V/FiveM. SirenX allows you to quickly and easily create siren patterns for your emergency vehicles by importing files into the editor and exporting them after modifying them.",
 	openGraph: {
-		description: 'The simple carcols.meta editor for GTA V/FiveM',
 		url: 'https://heyyczer.github.io/SirenX',
+		locale: "en_US",
 		images: 'https://heyyczer.github.io/SirenX/siren.png',
+	},
+	twitter: {
+		cardType: "summary",
 	}
 };
 
