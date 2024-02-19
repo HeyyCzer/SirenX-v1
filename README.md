@@ -1,4 +1,9 @@
 # SirenX
+
+> **SirenX** has been transformed into a private project and it's not open source anymore. This repository has been archieved.
+> 
+> The tool is currently available at: https://sirenx.heyyczer.com
+
 > The ultimate `carcols.meta` lighting pattern editor
 
 SirenX is a free and open-source website that allows you to edit `carcols.meta` sirens (lighting patterns) of your emergency vehicles or similars.
