@@ -1,8 +1,8 @@
 # SirenX
 
-> **SirenX** has been transformed into a private project and it's not open source anymore. This repository has been archieved.
+> This version of **SirenX** has been discontinued. The new version is available in [this repo](https://github.com/heyyczer/sirenx-remake). This repository has been archieved.
 > 
-> The tool is currently available at: https://sirenx.heyyczer.com
+> The new version of the tool is currently available at: https://sirenx.heyyczer.com
 
 > The ultimate `carcols.meta` lighting pattern editor
 
